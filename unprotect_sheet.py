@@ -5,12 +5,6 @@ import zipfile
 import argparse
 
 
-def validate_input_file(filepath: str) -> None:
-    """Validate that the input file is an .xlsx file."""
-    if not filepath.lower().endswith('.xlsx'):
-        raise argparse.ArgumentTypeError(f'The file "{filepath}" is not a .xlsx file.')
-
-
 def remove_sheet_protection_tags(xml_folder: str) -> None:
     """Remove <sheetProtection .../> tags from all .xml files in the given folder."""
     pattern = r'<sheetProtection\b[^<>]*?(?:/>|></sheetProtection>)'
@@ -34,7 +28,8 @@ def main():
     args = parser.parse_args()
 
     input_file = os.path.basename(args.input)
-    validate_input_file(input_file)
+    if not input_file.lower().endswith('.xlsx'):
+        raise argparse.ArgumentTypeError(f'The file "{input_file}" is not a .xlsx file.')
 
     # Output and temp names
     output_file = f'Unprotect{input_file}'
